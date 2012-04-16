@@ -14,7 +14,10 @@ MenuEntry::MenuEntry( char * menuText, void * userData=0, MENU_ACTION_CALLBACK_F
 
 void MenuEntry::ExecuteCallback()
 {
-  m_callback(m_menuText);
+  if( m_callback != NULL )
+  {
+    m_callback(m_menuText);
+  }
 }
 
 bool MenuEntry::addChild(MenuEntry* child)

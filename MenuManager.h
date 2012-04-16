@@ -12,7 +12,9 @@ class MenuManager
   void MenuDown();
   void MenuSelect();
   void MenuBack();
-  
+  void addChild( MenuEntry * p_menuEntry );    
+  void addSibling( MenuEntry * p_menuEntry );  
+  void SelectRoot();
   
   private:
   MenuEntry* m_pRootMenuEntry;

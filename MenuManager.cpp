@@ -12,6 +12,17 @@ bool MenuManager::addMenuRoot( MenuEntry * p_menuItem)
   m_pCurrentMenuEntry = p_menuItem;
 }
 
+void MenuManager::addSibling( MenuEntry * p_menuItem)
+{
+  m_pCurrentMenuEntry->addSibling( p_menuItem );  
+}
+
+void MenuManager::addChild( MenuEntry * p_menuItem)
+{
+  m_pCurrentMenuEntry->addChild( p_menuItem );
+}
+
+
 MenuEntry * MenuManager::getMenuRoot()
 {
   return m_pRootMenuEntry;
@@ -95,3 +106,7 @@ void MenuManager::MenuBack()
   }
 }
 
+void MenuManager::SelectRoot()
+{
+  m_pCurrentMenuEntry = m_pRootMenuEntry;
+}
