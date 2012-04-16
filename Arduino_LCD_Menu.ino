@@ -16,13 +16,11 @@ const int LCDD5 = 7;
 const int LCDD4 = 8;
 const int LCDE  = 9;
 const int LCDRS = 10;
-const int LCDV0 = 11;
 
 //Now create the MenuLCD and MenuManager classes.
 MenuLCD menuLCD( LCDRS, LCDE, LCDD4, LCDD5, LCDD6, LCDD7, 16, 2);
-MenuManager menuManager( &menuLCD);
+MenuManager menuManager( &menuLCD);//pass the menuLCD object to the menuManager with the & operator.
 
-/* setup hardware devices */
 //We would have called LiquidCrystal like this, but instead we let MenuLCD do the below call
 //LiquidCrystal lcd(LCDRS, LCDE, LCDD4, LCDD5, LCDD6, LCDD7);
 /**************************/
@@ -64,6 +62,7 @@ void setupMenus()
   //Add nodes via a depth-first traversal order
   MenuEntry * p_menuEntryRoot;
   //Add root node
+  //MenuEntry( char * menuText, void * userData/*=0*/, MENU_ACTION_CALLBACK_FUNC func);
   p_menuEntryRoot = new MenuEntry("Stopwatch", NULL, NULL);
   menuManager.addMenuRoot( p_menuEntryRoot );
   //add stopwatch children
@@ -101,18 +100,14 @@ void setupMenus()
 
 void setup() 
 {           
-  //Setup brightness (Needs to be moved to MenuLCD class
-  pinMode(11, OUTPUT);
-  analogWrite(11, 77); 
-  
   Serial.begin(115200);
   Serial.print("Ready.");
-  
   setupMenus();
 }
 
 void loop() 
 {
+  //The example shows using bytes on the serial port to move the menu. You can hook up your buttons or other controls.
   char incomingByte = 0;
   if (Serial.available() > 0) 
   {
