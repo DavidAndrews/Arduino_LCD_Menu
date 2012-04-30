@@ -15,7 +15,7 @@ class MenuManager
   void addChild( MenuEntry * p_menuEntry );    
   void addSibling( MenuEntry * p_menuEntry );  
   void SelectRoot();
-  int DoIntInput( int iMin, int iMax, int iStart, int iSteps, char **label, int iLabelLines );
+  void DoIntInput( int iMin, int iMax, int iStart, int iSteps, char **label, int iLabelLines );
   
   private:
   MenuEntry* m_pRootMenuEntry;
