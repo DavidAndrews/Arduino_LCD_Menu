@@ -2,7 +2,8 @@
 #include "MenuEntry.h"
 
 MenuManager::MenuManager(MenuLCD* pMenuLCD)
-: m_pMenuLCD( pMenuLCD)
+: m_pMenuLCD( pMenuLCD),
+  m_fDoingIntInput( false )
 {
 }
 
@@ -94,7 +95,6 @@ void MenuManager::MenuSelect()
   {
     m_pCurrentMenuEntry->ExecuteCallback();
   }  
-  DrawMenu();
 }
 
 void MenuManager::MenuBack()
@@ -110,3 +110,10 @@ void MenuManager::SelectRoot()
 {
   m_pCurrentMenuEntry = m_pRootMenuEntry;
 }
+
+void MenuManager::DoIntInput( int iMin, int iMax, int iStart, int iSteps, char **label, int iLabelLines )
+{
+  m_fDoingIntInput = true;
+  
+}
+

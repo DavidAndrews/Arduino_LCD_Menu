@@ -21,15 +21,15 @@ const int LCDRS = 10;
 MenuLCD menuLCD( LCDRS, LCDE, LCDD4, LCDD5, LCDD6, LCDD7, 16, 2);
 MenuManager menuManager( &menuLCD);//pass the menuLCD object to the menuManager with the & operator.
 
+//when the display is showing user results (e.g. time elapsed), the next "select" should send it back into the menu.
+unsigned int isDisplaying = false;
+
+
+
 //We would have called LiquidCrystal like this, but instead we let MenuLCD do the below call
 //LiquidCrystal lcd(LCDRS, LCDE, LCDD4, LCDD5, LCDD6, LCDD7);
 /**************************/
 
-//This is a sample callback funtion for when a menu item with no children (aka command) is selected
-void StartCallback( char* pMenuText )
-{
-  Serial.println( pMenuText );
-}
 
 //This function is called during setup to populate the menu with the tree of nodes
 //This can be a bit brain-bending to write.  If you draw a tree you want for your menu first
@@ -54,6 +54,8 @@ void StartCallback( char* pMenuText )
 //  |-Stop
 //  Credits
 
+void StopCallback( char* pMenuText, void *pUserData );
+void ResetCallback( char* pMenuText, void *pUserData );
 
 void setupMenus()
 {
@@ -66,9 +68,9 @@ void setupMenus()
   p_menuEntryRoot = new MenuEntry("Stopwatch", NULL, NULL);
   menuManager.addMenuRoot( p_menuEntryRoot );
   //add stopwatch children
-  menuManager.addChild( new MenuEntry("Start", NULL, NULL) );
-  menuManager.addChild( new MenuEntry("Stop", NULL, NULL) );
-  menuManager.addChild( new MenuEntry("Reset", NULL, NULL) );
+  menuManager.addChild( new MenuEntry("Stopwatch Start", NULL, StartCallback) );
+  menuManager.addChild( new MenuEntry("Stopwatch Stop", NULL, StopCallback ) );
+  menuManager.addChild( new MenuEntry("Reset", NULL, ResetCallback) );
   
   menuManager.addSibling( new MenuEntry("Timer", NULL, NULL ) );
   //Now we want to select the "Timer" entry so we can add children under that node
@@ -86,8 +88,9 @@ void setupMenus()
   //Add "AutoReset"'s children
   menuManager.addChild( new MenuEntry( "On", NULL, NULL ) );
   menuManager.addChild( new MenuEntry( "Off", NULL, NULL ) );
-  menuManager.addSibling( new MenuEntry( "Start", NULL, NULL) );
-  menuManager.addSibling( new MenuEntry( "Stop", NULL, NULL) );
+  //Add timer start and stop
+  menuManager.addSibling( new MenuEntry( "Countdown Start", NULL, NULL) );
+  menuManager.addSibling( new MenuEntry( "Countdown Stop", NULL, NULL) );
   
   menuManager.MenuUp();
   menuManager.addSibling( new MenuEntry( "Credits", NULL, NULL) );
@@ -104,6 +107,8 @@ void setup()
   Serial.print("Ready.");
   setupMenus();
 }
+
+
 
 void loop() 
 {
@@ -122,7 +127,15 @@ void loop()
       menuManager.MenuDown();
       break;
     case 's':
-      menuManager.MenuSelect();
+      if( isDisplaying )
+      {
+        isDisplaying = false;
+        menuManager.DrawMenu();
+      }
+      else
+      {
+        menuManager.MenuSelect();
+      }
       break;
     case 'b':
       menuManager.MenuBack();
@@ -130,4 +143,39 @@ void loop()
     default:
       break;
   }
+}
+
+unsigned long startMillis = 0;
+unsigned long stopMillis = 0;
+
+//This is a sample callback funtion for when a menu item with no children (aka command) is selected
+void StartCallback( char* pMenuText, void *pUserData )
+{
+  startMillis = millis();
+  char *pTextLines[2] = {"Clock Started", "" };
+  menuLCD.MenuLCDPrint( pTextLines, 2, 3 );
+  isDisplaying = true;  
+}
+
+
+//This is a sample callback funtion for when a menu item with no children (aka command) is selected
+void StopCallback( char* pMenuText, void *pUserData )
+{
+  stopMillis = millis();
+  
+  char strSeconds[50];
+  dtostrf( ((float)(stopMillis-startMillis))/1000, 1, 2, strSeconds );
+  char *pTextLines[2] = {"Elapsed Time", strSeconds };
+  menuLCD.MenuLCDPrint( pTextLines, 2, 3 );
+  isDisplaying = true;
+}  
+  
+//This is a sample callback funtion for when a menu item with no children (aka command) is selected
+void ResetCallback( char* pMenuText, void *pUserData )
+{
+  startMillis = 0;
+  stopMillis = 0;
+  char *pTextLines[2] = {"Clock reset", "" };
+  menuLCD.MenuLCDPrint( pTextLines, 2, 3 );
+
 }

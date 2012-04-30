@@ -9,6 +9,7 @@ class MenuLCD
   MenuLCD(int LCDRS, int LCDE, int LCDD4, int LCDD5, int LCDD6, int LCDD7, int characters, int lines);
   bool MenuLCDSetup();
   bool MenuLCDPrint( char ** pString, int nLines, int nSelectedLine /*= 0*/ );
+  int DoIntInput( int iMin, int iMax, int iSteps );
   
   private:
   LiquidCrystal* m_pLcd;

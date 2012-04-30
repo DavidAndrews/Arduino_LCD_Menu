@@ -4,7 +4,8 @@
 #define MenuEntry_h 1
 
 
-typedef void (*MENU_ACTION_CALLBACK_FUNC)( char * pMenuText );
+typedef void (*MENU_ACTION_CALLBACK_FUNC)( char * pMenuText, void * pUserData );
+
 
 class MenuEntry
 {

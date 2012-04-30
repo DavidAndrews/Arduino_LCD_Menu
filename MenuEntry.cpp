@@ -1,7 +1,7 @@
 #include <arduino.h>
 #include "MenuEntry.h"
 
-MenuEntry::MenuEntry( char * menuText, void * userData=0, MENU_ACTION_CALLBACK_FUNC func = 0)
+MenuEntry::MenuEntry( char * menuText, void * userData, MENU_ACTION_CALLBACK_FUNC func)
 {
   m_menuText = strdup(menuText);
   m_userData = userData;
@@ -16,7 +16,7 @@ void MenuEntry::ExecuteCallback()
 {
   if( m_callback != NULL )
   {
-    m_callback(m_menuText);
+    m_callback(m_menuText, m_userData);
   }
 }
 
