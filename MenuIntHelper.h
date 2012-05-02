@@ -19,40 +19,22 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 */
 
 
-#include "MenuEntry.h"
-#include "MenuLCD.h"
-#include "MenuIntHelper.h"
+#ifndef MenuIntHelper_H
 
-enum MENU_ACTION { MENU_ACTION_UP, MENU_ACTION_DOWN, MENU_ACTION_SELECT, MENU_ACTION_BACK };
-
-class MenuManager
+#define MenuIntHelper_H 1
+class MenuIntHelper
 {
   public:
-  MenuManager(MenuLCD* pMenuLCD);
-  bool addMenuRoot( MenuEntry * p_menuEntry);
-  MenuEntry * getMenuRoot();
-  void DrawMenu();
-  void DoMenuAction( MENU_ACTION action );
-  void MenuUp();
-  void MenuDown();
-  void MenuSelect();
-  void MenuBack();
-  void addChild( MenuEntry * p_menuEntry );    
-  void addSibling( MenuEntry * p_menuEntry );  
-  void SelectRoot();
-  void DoIntInput( int iMin, int iMax, int iStart, int iSteps, char **label, int iLabelLines, int *pInt );
-  void DrawInputRow( char *pString );
-
-  
+  MenuIntHelper( int iMin, int iMax, int iStart, int iStep );
+  int numIncrease();
+  int numDecrease();
+  int getInt();
   private:
-  MenuEntry* m_pRootMenuEntry;
-  MenuEntry* m_pCurrentMenuEntry;
-  MenuLCD* m_pMenuLCD;
-  unsigned int m_fDoingIntInput;
-  MenuIntHelper *m_pMenuIntHelper;
-  int m_iIntLine;
-  int *m_pInt;
+  int m_curNum;
+  int m_min;
+  int m_max;
+  int m_step;
 };
-
+#endif
 
 

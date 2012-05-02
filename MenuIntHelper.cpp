@@ -3,6 +3,7 @@
 Copyright Dustin Andrews, David Andrews 2012 
 Licensed under the follwing license:
 
+
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
 following conditions are met:
 Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
@@ -17,42 +18,32 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
-
-#include "MenuEntry.h"
-#include "MenuLCD.h"
 #include "MenuIntHelper.h"
 
-enum MENU_ACTION { MENU_ACTION_UP, MENU_ACTION_DOWN, MENU_ACTION_SELECT, MENU_ACTION_BACK };
-
-class MenuManager
+MenuIntHelper::MenuIntHelper( int iMin, int iMax, int iStart, int iStep ):
+m_min( iMin), m_max( iMax ), m_curNum( iStart ), m_step( iStep)
 {
-  public:
-  MenuManager(MenuLCD* pMenuLCD);
-  bool addMenuRoot( MenuEntry * p_menuEntry);
-  MenuEntry * getMenuRoot();
-  void DrawMenu();
-  void DoMenuAction( MENU_ACTION action );
-  void MenuUp();
-  void MenuDown();
-  void MenuSelect();
-  void MenuBack();
-  void addChild( MenuEntry * p_menuEntry );    
-  void addSibling( MenuEntry * p_menuEntry );  
-  void SelectRoot();
-  void DoIntInput( int iMin, int iMax, int iStart, int iSteps, char **label, int iLabelLines, int *pInt );
-  void DrawInputRow( char *pString );
-
-  
-  private:
-  MenuEntry* m_pRootMenuEntry;
-  MenuEntry* m_pCurrentMenuEntry;
-  MenuLCD* m_pMenuLCD;
-  unsigned int m_fDoingIntInput;
-  MenuIntHelper *m_pMenuIntHelper;
-  int m_iIntLine;
-  int *m_pInt;
-};
-
-
+}
+int MenuIntHelper::numIncrease()
+{
+  //This function may have bugs when m_max is near the MAXINT limit 
+  //but if your UI requires users to input MAXINT numbers, you have bigger problems.
+  if( m_curNum + m_step < m_max )
+  {
+    m_curNum += m_step;
+  }
+  return m_curNum;
+}
+int MenuIntHelper::numDecrease()
+{
+  if( m_curNum - m_step >= m_min )
+  {
+    m_curNum -= m_step;
+  }  
+  return m_curNum;
+}
+int MenuIntHelper::getInt()
+{
+  return m_curNum;  
+}
 
