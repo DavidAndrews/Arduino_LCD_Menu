@@ -21,6 +21,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
 #include <arduino.h>
 #include "MenuEntry.h"
+#include "MenuManager.h"
 
 MenuEntry::MenuEntry( char * menuText, void * userData, MENU_ACTION_CALLBACK_FUNC func)
 {
@@ -99,4 +100,21 @@ void MenuEntry::setParent( MenuEntry * parent)
 {
   m_parent = parent;
 }
+
+void MenuEntry_BoolTrueCallbackFunc( char * pMenuText, void * pUserData )
+{
+  *((unsigned int *)pUserData) = true;
+}
+
+void MenuEntry_BoolFalseCallbackFunc( char * pMenuText, void * pUserData )
+{
+  *((unsigned int *)pUserData) = false;
+}
+
+void MenuEntry_BackCallbackFunc( char * pMenuText, void * pUserData )
+{
+  ((MenuManager *)pUserData)->DoMenuAction( MENU_ACTION_BACK );
+}
+
+
 

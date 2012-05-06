@@ -27,23 +27,37 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 
 typedef void (*MENU_ACTION_CALLBACK_FUNC)( char * pMenuText, void * pUserData );
 
-
+//The MenuEntry class represents one menu item in the overall menu system, such as "Set Time" or "Back"
+//The MenuEntry classes point to each other to create a tree of menu items.  You can navigate
+// the classes using the get* calls.  MenuManager uses the get* calls to figure out what to draw to the LCD
 class MenuEntry
 {
   public:
-  ~MenuEntry();
-  MenuEntry( char * menuText, void * userData/*=0*/, MENU_ACTION_CALLBACK_FUNC func);
+  //Constructor to create each entry.
+  MenuEntry( char * menuText, void * userData, MENU_ACTION_CALLBACK_FUNC func);
+  //add a child menu item.  They will be kept it the order they are added, from top to bottom.
   bool addChild( MenuEntry* child);
+  //Add a menu item as a sibling of this one, at the end of the sibling chain.
   bool addSibling( MenuEntry* sibling);
+  //Sets the previous sibling, mostly used during menu creation to notify a new entry where it's
+  //previous pointer needs to point.
   void setPrevSibling( MenuEntry* prevSibling);
+  //Can set the action call back dynamically. Overrides what was passed to the constructor.
   bool addActionCallback( MENU_ACTION_CALLBACK_FUNC pCallback);
+  
   char* getMenuText();
+  //Sets the previous sibling, mostly used during menu creation to notify a new entry where it's
+  //previous pointer needs to point.
   void setParent( MenuEntry* parent );
+  
   MenuEntry *getNextSibling();
   MenuEntry *getPrevSibling();
   MenuEntry *getChild();
   MenuEntry *getParent();
+  //This call will call the action callback for use when the menu item is selected.
+  //if this menu entry has any children, the callback will not be executed.
   void ExecuteCallback();
+  
   
   private:
   void* m_userData;
@@ -54,6 +68,16 @@ class MenuEntry
   MENU_ACTION_CALLBACK_FUNC m_callback;
   MenuEntry* m_prevSibling;
 };
+
+//To use these functions, pass a function pointer as the argument to the MenuEntry constructor.
+//pUserData should point to an unsigned int that will be set to true or false.
+void MenuEntry_BoolTrueCallbackFunc( char * pMenuText, void * pUserData );
+void MenuEntry_BoolFalseCallbackFunc( char * pMenuText, void * pUserData );
+
+//Use this callback function for a "Back" menu item for hardware that doesn't include a back button
+//pUserData should point to a MenfsuManager object.
+void MenuEntry_BackCallbackFunc( char * pMenuText, void * pUserData );
+
 
 #endif
 
