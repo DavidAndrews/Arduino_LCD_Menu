@@ -32,6 +32,7 @@ class MenuLCD
   bool PrintLineRight( char* pString, int iRow );
   int getLines();
   int getCharacters();
+  void ClearLCD();
   
   private:
   LiquidCrystal* m_pLcd;

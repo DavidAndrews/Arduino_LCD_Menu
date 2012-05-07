@@ -66,6 +66,15 @@ bool MenuLCD::PrintMenu( char* pString[], int nLines, int nSelectedLine = 0 )
 
 bool MenuLCD::PrintLineRight( char* pString, int iRow )
 {
+  //clear the line
+  char buff[ m_characters ];
+  for( int i = 0; i < m_characters; ++i )
+  {
+    buff[i] = ' ';
+  }
+  m_pLcd->setCursor( 0, iRow );
+  m_pLcd->print( buff );
+  //now print the new number
   m_pLcd->setCursor(m_characters - strlen(pString),iRow);
   m_pLcd->print( pString );  
 }
@@ -78,4 +87,7 @@ int MenuLCD::getCharacters()
 {
   return m_characters;
 }
-
+void MenuLCD::ClearLCD()
+{
+  m_pLcd->clear();
+}

@@ -106,6 +106,9 @@ void MenuManager::DoMenuAction( MENU_ACTION action )
   }
   else
   {
+    m_pMenuLCD->ClearLCD();
+    delay(10);
+    DrawMenu();
     switch (action )
     {
       case MENU_ACTION_UP:

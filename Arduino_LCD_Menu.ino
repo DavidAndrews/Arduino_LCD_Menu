@@ -44,10 +44,12 @@ MenuManager g_menuManager( &g_menuLCD);//pass the g_menuLCD object to the g_menu
 //Global variables used by the sample application
 //when the display is showing user results (e.g. time elapsed), the next "select" should send it back into the menu.
 unsigned int g_isDisplaying = false;
-int g_timerTime = 0;
-unsigned int g_timerRunning = false;
-unsigned int g_timerTarget = 0;
-unsigned int g_autoReset = false;
+int g_timerTime = 23;
+long g_timerRunning = false;
+long g_timerTarget = 0;
+long g_autoReset = false;
+long g_stopMillis = 0;
+long g_startMillis = 0;
 //end Global variables section
 
 //setupMenus
@@ -88,7 +90,7 @@ void setupMenus()
   g_menuManager.addChild( new MenuEntry("Stopwatch Start", NULL, WatchStartCallback) );
   g_menuManager.addChild( new MenuEntry("Stopwatch Stop", NULL, WatchStopCallback ) );
   g_menuManager.addChild( new MenuEntry("Reset", NULL, WatchResetCallback) );
-  g_menuManager.addChild( new MenuEntry("Back", NULL, MenuEntry_BackCallbackFunc) );
+  g_menuManager.addChild( new MenuEntry("Back", (void *) &g_menuManager, MenuEntry_BackCallbackFunc) );
   
   g_menuManager.addSibling( new MenuEntry("Timer", NULL, NULL ) );
   //Now we want to select the "Timer" entry so we can add children under that node
@@ -105,12 +107,12 @@ void setupMenus()
   //Use the built-in BOOL setting callbacks from MenuEntry.h: MenuEntry_Bool*CallbackFunc
   g_menuManager.addChild( new MenuEntry( "Turn Reset On",  (void *) (&g_autoReset), MenuEntry_BoolTrueCallbackFunc ) );
   g_menuManager.addChild( new MenuEntry( "Turn Reset Off", (void *) (&g_autoReset), MenuEntry_BoolFalseCallbackFunc ) );
-  g_menuManager.addChild( new MenuEntry("Back", NULL, MenuEntry_BackCallbackFunc) );
+  g_menuManager.addChild( new MenuEntry("Back", (void *) &g_menuManager, MenuEntry_BackCallbackFunc) );
 
   //Add timer start and stop
   g_menuManager.addSibling( new MenuEntry( "Countdown Start", NULL, TimerStartCallback) );
   g_menuManager.addSibling( new MenuEntry( "Countdown Stop", NULL, TimerStopCallback) );
-  g_menuManager.addSibling( new MenuEntry("Back", NULL, MenuEntry_BackCallbackFunc) );
+  g_menuManager.addSibling( new MenuEntry("Back", (void *) &g_menuManager, MenuEntry_BackCallbackFunc) );
   
   //Get the selection state back to the root for startup and to add the last entry
   g_menuManager.SelectRoot();
@@ -165,10 +167,22 @@ void loop()
   }
   if( g_timerRunning && g_timerTarget < millis())
   {
+    long time = millis();
+    
+    Serial.print( "time = " );
+    Serial.println( time );
+    
     Serial.println("Timer Goes Off HERE!");
     if( g_autoReset)
     {
-      g_timerTarget = millis() + (g_timerTime*1000);
+      Serial.print( "timer target was "); 
+      Serial.println( g_timerTarget );
+      g_timerTarget = time + ( g_timerTime *1000 );
+      Serial.print( "timer target is now ");
+      Serial.println( g_timerTarget );
+      Serial.print( "timerTime is " );
+      Serial.println( g_timerTime );
+      Serial.println( "--------" );
     }
     else
     {
@@ -176,13 +190,11 @@ void loop()
     }
   }
 }
-unsigned long startMillis = 0;
-unsigned long stopMillis = 0;
 
 //This is a sample callback funtion for when a menu item with no children (aka command) is selected
 void WatchStartCallback( char* pMenuText, void *pUserData )
 {
-  startMillis = millis();
+  g_startMillis = millis();
   char *pTextLines[2] = {"Clock Started", "" };
   g_menuLCD.PrintMenu( pTextLines, 2, 3 );
   g_isDisplaying = true;  
@@ -192,10 +204,10 @@ void WatchStartCallback( char* pMenuText, void *pUserData )
 //This is a sample callback funtion for when a menu item with no children (aka command) is selected
 void WatchStopCallback( char* pMenuText, void *pUserData )
 {
-  stopMillis = millis();
+  g_stopMillis = millis();
   
   char strSeconds[50];
-  dtostrf( ((float)(stopMillis-startMillis))/1000, 1, 2, strSeconds );
+  dtostrf( ((float)(g_stopMillis-g_startMillis))/1000, 1, 2, strSeconds );
   char *pTextLines[2] = {"Elapsed Time", strSeconds };
   g_menuLCD.PrintMenu( pTextLines, 2, 3 );
   g_isDisplaying = true;
@@ -204,8 +216,8 @@ void WatchStopCallback( char* pMenuText, void *pUserData )
 //This is a sample callback funtion for when a menu item with no children (aka command) is selected
 void WatchResetCallback( char* pMenuText, void *pUserData )
 {
-  startMillis = 0;
-  stopMillis = 0;
+  g_startMillis = 0;
+  g_stopMillis = 0;
   char *pTextLines[2] = {"Clock reset", "" };
   g_menuLCD.PrintMenu( pTextLines, 2, 3 );
 }
@@ -225,6 +237,8 @@ void SetTimeCallback( char* pMenuText, void *pUserData )
   int iStep = 5;
   
   g_menuManager.DoIntInput( iMin, iMax, iStart, iStep, &pLabel, iNumLabelLines, &g_timerTime );
+  Serial.print("Timer time" );
+  Serial.println( g_timerTime );
 }
 //This is a sample callback funtion for when a menu item with no children (aka command) is selected
 void TimerStartCallback( char* pMenuText, void *pUserData )
@@ -237,12 +251,11 @@ void TimerStartCallback( char* pMenuText, void *pUserData )
   g_timerRunning = true;
   char strSeconds[50];
   itoa( g_timerTime, strSeconds, 10 );
-  char *pTextLines[2] = {"Timer started for ", strSeconds };
+  char *pTextLines[2] = {"Go!", strSeconds };
   g_menuLCD.PrintMenu( pTextLines, 2, 3 );
   g_isDisplaying = true;
 }  
 
-unsigned int StopMillis = 0;
 
 //This is a sample callback funtion for when a menu item with no children (aka command) is selected
 void TimerStopCallback( char* pMenuText, void *pUserData )
@@ -254,6 +267,9 @@ void CreditsCallback( char* pMenuText, void *pUserData )
 {
   char *pTextLines[2] = {"David Andrews ", "Dustin Andrews" };
   g_menuLCD.PrintMenu( pTextLines, 2, 1 );
+  delay(5000);
+  char *pTextLines2[2] = {"http://authenti","cinvention.com"};
+  g_menuLCD.PrintMenu( pTextLines2, 2, 5 );  
   g_isDisplaying = true;
 }  
 
