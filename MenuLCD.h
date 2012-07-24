@@ -30,12 +30,20 @@ class MenuLCD
   bool MenuLCDSetup();
   bool PrintMenu( char ** pString, int nLines, int nSelectedLine /*= 0*/ );
   bool PrintLineRight( char* pString, int iRow );
+  bool PrintLine( char* pString, int iRow );
   int getLines();
   int getCharacters();
   void ClearLCD();
+  LiquidCrystal * getLCD();
+
+  enum Direction{ LEFT, RIGHT };
+
+
+  void WipeMenu( char* pString[], int nLines, MenuLCD::Direction dir );
+
   
   private:
-  LiquidCrystal* m_pLcd;
+  LiquidCrystal* m_pLCD;
   int m_LCDRS;
   int m_LCDE;
   int m_LCDD4;

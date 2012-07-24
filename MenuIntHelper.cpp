@@ -28,7 +28,7 @@ int MenuIntHelper::numIncrease()
 {
   //This function may have bugs when m_max is near the MAXINT limit 
   //but if your UI requires users to input MAXINT numbers, you have bigger problems.
-  if( m_curNum + m_step < m_max )
+  if( m_curNum + m_step <= m_max )
   {
     m_curNum += m_step;
   }

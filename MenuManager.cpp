@@ -19,6 +19,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 */
 
 
+
 #include "MenuManager.h"
 #include "MenuEntry.h"
 
@@ -50,6 +51,26 @@ MenuEntry * MenuManager::getMenuRoot()
   return m_pRootMenuEntry;
 }
 
+
+void MenuManager::WipeMenu( MenuLCD::Direction dir )
+{
+  if( dir == MenuLCD::LEFT )
+  {
+    for( int i = 0; i < m_pMenuLCD->getCharacters(); ++i )
+    { 
+      m_pMenuLCD->getLCD()->scrollDisplayLeft();
+      delay(75);
+    }
+  }
+  else
+  {
+    for( int i = 0; i < m_pMenuLCD->getCharacters(); ++i )
+    {
+      m_pMenuLCD->getLCD()->scrollDisplayRight();
+      delay(75);
+    }
+  }
+}
 
 
 void MenuManager::DrawMenu()
@@ -83,13 +104,13 @@ void MenuManager::DoMenuAction( MENU_ACTION action )
     switch (action )
     {
       case MENU_ACTION_UP:
-        iNewNum = m_pMenuIntHelper->numIncrease();
+        iNewNum = m_pMenuIntHelper->numDecrease();
         itoa( iNewNum, buff, 10 );
         DrawInputRow( buff );
         *m_pInt = iNewNum;
         break;
       case MENU_ACTION_DOWN:
-        iNewNum = m_pMenuIntHelper->numDecrease();
+        iNewNum = m_pMenuIntHelper->numIncrease();
         itoa( iNewNum, buff, 10 );
         DrawInputRow( buff );
         *m_pInt = iNewNum;
@@ -161,12 +182,21 @@ void MenuManager::MenuSelect()
   MenuEntry *child = m_pCurrentMenuEntry->getChild();
   if( child != NULL )
   {
+    WipeMenu( MenuLCD::LEFT);
     m_pCurrentMenuEntry = child;
     DrawMenu();
   }
   else
   {
+    if( !m_pCurrentMenuEntry->isBackEntry() )
+    {
+      WipeMenu( MenuLCD::LEFT);
+    }
     m_pCurrentMenuEntry->ExecuteCallback();
+    if( !m_fDoingIntInput )
+    {
+      DrawMenu();
+    }
   }  
 }
 
@@ -174,6 +204,7 @@ void MenuManager::MenuBack()
 {
   if( m_pCurrentMenuEntry->getParent() != NULL )
   {
+    WipeMenu( MenuLCD::RIGHT);
     m_pCurrentMenuEntry = m_pCurrentMenuEntry->getParent();
     DrawMenu();
   }

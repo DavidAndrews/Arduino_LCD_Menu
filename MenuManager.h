@@ -43,6 +43,9 @@ class MenuManager
   void DoIntInput( int iMin, int iMax, int iStart, int iSteps, char **label, int iLabelLines, int *pInt );
   void DrawInputRow( char *pString );
 
+  void WipeMenu( MenuLCD::Direction dir);
+
+
   
   private:
   MenuEntry* m_pRootMenuEntry;

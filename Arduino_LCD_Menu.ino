@@ -50,6 +50,28 @@ long g_timerTarget = 0;
 long g_autoReset = false;
 long g_stopMillis = 0;
 long g_startMillis = 0;
+
+byte g_smiley[8] = {
+  B00000,
+  B10001,
+  B00000,
+  B00000,
+  B10001,
+  B01110,
+  B00000,
+};
+
+byte g_frown[8] = {
+  B00000,
+  B10001,
+  B00000,
+  B00000,
+  B00000,
+  B01110,
+  B10001,
+};
+
+
 //end Global variables section
 
 //setupMenus
@@ -119,6 +141,11 @@ void setupMenus()
   g_menuManager.addSibling( new MenuEntry( "Credits", NULL, CreditsCallback) );
   //Make sure the menu is drawn correctly after all changes are done
   g_menuManager.DrawMenu();
+
+  g_menuManager.addSibling( new MenuEntry( "Draw Smiley", NULL, SmileyCallback) );
+  
+  g_menuLCD.getLCD()->createChar( 0, g_smiley );
+  g_menuLCD.getLCD()->createChar( 1, g_frown );
 }
 
 
@@ -272,4 +299,19 @@ void CreditsCallback( char* pMenuText, void *pUserData )
   g_menuLCD.PrintMenu( pTextLines2, 2, 5 );  
   g_isDisplaying = true;
 }  
+
+void SmileyCallback( char* pMenuText, void *pUserData )
+{
+  for( int i = 0; i < 10 ; ++i )
+  {
+    g_menuLCD.ClearLCD();
+    g_menuLCD.getLCD()->setCursor( 8,0 );
+    g_menuLCD.getLCD()->print( (char)0 );
+    delay(500);
+    g_menuLCD.ClearLCD();
+    g_menuLCD.getLCD()->setCursor( 8,0 );
+    g_menuLCD.getLCD()->print( (char)1 );
+    delay(500);
+  }   
+}
 
