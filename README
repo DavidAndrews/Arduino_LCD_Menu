@@ -1,0 +1,40 @@
+Adruino_LCD_MENU README
+
+By David Andrews - May 6, 2012
+
+License: Modified BSD (See complete license at end)
+
+Purpose: To shorten the time to get an Adriuno project running using a menuing
+system.
+
+Getting Started: Unpack archive as sketchbook/libraries/Arduino_LCD_Menu.  In
+the Arduino IDE, Open Arduino_LCD_Menu from the Examples menu.  Upload the
+sketch.  In the serial window, send the following keys to control the menu:
+
+u - move UP
+d - move DOWN
+s - Select a menu option
+b - move back in the menu tree
+
+The idea is that you can invoke the menu system when appropriate, and have the
+Menu code drive all the navigation by piping your hardware inputs into the
+appropriate call in MenuManager.  When a menu item is selected that has an
+action associated with it, the menu system calls your callback so you can
+accomplish whatever the menu item is supposed to do.
+
+This library builds on top of the Liquid Crystal library for doing LCD output.
+On a new system, you should verify that you can create simple outputs using the
+Liquid Crystal library first, then move to this library to do your menuing.
+
+The built-in actions right now are:
+
+Back - Add a menu item labled "Back" and pass it the MenuEntry_BackCallbackFunc
+pointer, and you now have a Back menu entry (in case you don't have a hardware
+back button)
+
+BoolTrue/False - These set a boolean to true or false so you can have off/on
+functionality easily.  This callback needs some more thinking and work right
+now to provide user feedback that the option was selected.
+
+In addition, there is a MenuIntHelper class that assists in taking an integer
+input and setting a value. (See MenuIntHelper.h)

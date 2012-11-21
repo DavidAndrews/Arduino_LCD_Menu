@@ -25,32 +25,4 @@ IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
-#include <MenuIntHelper.h>
-
-MenuIntHelper::MenuIntHelper( int iMin, int iMax, int iStart, int iStep ):
-m_min( iMin), m_max( iMax ), m_curNum( iStart ), m_step( iStep)
-{
-}
-int MenuIntHelper::numIncrease()
-{
-  //This function may have bugs when m_max is near the MAXINT limit 
-  //but if your UI requires users to input MAXINT numbers, you have bigger problems.
-  if( m_curNum + m_step <= m_max )
-  {
-    m_curNum += m_step;
-  }
-  return m_curNum;
-}
-int MenuIntHelper::numDecrease()
-{
-  if( m_curNum - m_step >= m_min )
-  {
-    m_curNum -= m_step;
-  }  
-  return m_curNum;
-}
-int MenuIntHelper::getInt()
-{
-  return m_curNum;  
-}
-
+#include <Arduino_LCD_Menu.h>
