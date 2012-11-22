@@ -1,32 +1,36 @@
 /*
- Arduino_LCD_Menu Library
-Copyright Dustin Andrews, David Andrews 2012 
+Arduino_LCD_Menu Library
+Copyright Dustin Andrews, David Andrews 2012
 Licensed under the follwing license:
 
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
-following conditions are met:
-Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
-Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer 
-in the documentation and/or other materials provided with the distribution. 
-The name of the author may not be used to endorse or promote products derived from this software without specific prior written permission. 
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
 
-THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+Redistributions of source code must retain the above copyright notice, this list
+of conditions and the following disclaimer. Redistributions in binary form must
+reproduce the above copyright notice, this list of conditions and the following
+disclaimer in the documentation and/or other materials provided with the
+distribution. The name of the author may not be used to endorse or promote
+products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+OF SUCH DAMAGE.
 */
 
+#ifndef MENUENTRY_H
+#define MENUENTRY_H
 
-#include <arduino.h>
-
-#ifndef MenuEntry_h
-#define MenuEntry_h 1
-
+#include <Arduino.h>
 
 typedef void (*MENU_ACTION_CALLBACK_FUNC)( char * pMenuText, void * pUserData );
-
 
 //To use these functions, pass a function pointer as the argument to the MenuEntry constructor.
 //pUserData should point to an unsigned int that will be set to true or false.
@@ -54,12 +58,12 @@ class MenuEntry
   void setPrevSibling( MenuEntry* prevSibling);
   //Can set the action call back dynamically. Overrides what was passed to the constructor.
   bool addActionCallback( MENU_ACTION_CALLBACK_FUNC pCallback);
-  
+
   char* getMenuText();
   //Sets the previous sibling, mostly used during menu creation to notify a new entry where it's
   //previous pointer needs to point.
   void setParent( MenuEntry* parent );
-  
+
   MenuEntry *getNextSibling();
   MenuEntry *getPrevSibling();
   MenuEntry *getChild();
@@ -69,8 +73,7 @@ class MenuEntry
   void ExecuteCallback();
 
   bool isBackEntry() { return (m_callback == MenuEntry_BackCallbackFunc); }
-  
-  
+
   private:
   void* m_userData;
   char* m_menuText;
@@ -81,7 +84,4 @@ class MenuEntry
   MenuEntry* m_prevSibling;
 };
 
-
-
-#endif
-
+#endif // MENUENTRY_H
