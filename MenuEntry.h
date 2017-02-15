@@ -19,7 +19,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 */
 
 
-#include <arduino.h>
+#include <Arduino.h>
 
 #ifndef MenuEntry_h
 #define MenuEntry_h 1
