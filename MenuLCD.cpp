@@ -49,11 +49,11 @@ bool MenuLCD::PrintMenu( char* pString[], int nLines, int nSelectedLine = 0 )
     if( i == nSelectedLine )
     {//this line should be surrounded by []
        m_pLCD->setCursor(0, i);
-       m_pLCD->write( '[');
+       m_pLCD->write( '>');
        m_pLCD->setCursor(1,i);
        m_pLCD->print( pString[i] );
        m_pLCD->setCursor(m_characters - 1, i);
-       m_pLCD->write( ']');
+       //m_pLCD->write( ']');
     }
     else
     {
