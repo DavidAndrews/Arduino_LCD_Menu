@@ -8,6 +8,16 @@ License: Modified BSD (See complete license at end)
 
 Purpose: To shorten the time to get an Adriuno project running using a menuing system.
 
+
+Changes : 
+ - new constructor added which allows to enable / disable the execution of callback functions when the root 
+   menu has been selected.  
+
+    const bool doRootAction = false;
+    MenuLCD g_menuLCD( LCDRS, LCDE, LCDD4, LCDD5, LCDD6, LCDD7, 16, 2);
+    MenuManager g_menuManager( &g_menuLCD, doRootAction); 
+
+
 Getting Started: Open the Arduino_Menu_LCD.ino sketch in the Arduino IDE.  Upload the sketch.  In the serial window, send the following keys to control the menu:
 
 u - move UP
