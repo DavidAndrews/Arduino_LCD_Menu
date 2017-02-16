@@ -28,7 +28,9 @@ enum MENU_ACTION { MENU_ACTION_UP, MENU_ACTION_DOWN, MENU_ACTION_SELECT, MENU_AC
 class MenuManager
 {
   public:
-  MenuManager(MenuLCD* pMenuLCD);
+  MenuManager(MenuLCD* pMenuLCD); 
+  MenuManager(MenuLCD* pMenuLCD, bool rootAction);
+
   bool addMenuRoot( MenuEntry * p_menuEntry);
   MenuEntry * getMenuRoot();
   void DrawMenu();
@@ -54,7 +56,9 @@ class MenuManager
   unsigned int m_fDoingIntInput;
   MenuIntHelper *m_pMenuIntHelper;
   int m_iIntLine;
-  int *m_pInt;
+  int *m_pInt; 
+  bool m_execRootMenuAction;
+
 };
 
 

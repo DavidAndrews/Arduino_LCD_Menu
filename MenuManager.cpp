@@ -29,6 +29,14 @@ MenuManager::MenuManager(MenuLCD* pMenuLCD)
 {
 }
 
+// new Constructor which allows us to define in class if we want actions being executed 
+// on menus which have a child - or not. 
+MenuManager::MenuManager(MenuLCD* pMenuLCD, bool execRootAction ): m_pMenuLCD( pMenuLCD),  m_fDoingIntInput( false ) {
+  m_execRootMenuAction = execRootAction ;
+}
+
+
+
 bool MenuManager::addMenuRoot( MenuEntry * p_menuItem)
 {
   m_pRootMenuEntry = p_menuItem;
@@ -178,7 +186,16 @@ void MenuManager::MenuDown()
 }
 
 void MenuManager::MenuSelect()
-{
+{ 
+
+  //
+  // EDIT: Changed library to always do a callback even if the 
+  // menu has a child. This allows me to keep track of the menu we are in.
+  // 
+  if ( m_execRootMenuAction == true) { 
+     m_pCurrentMenuEntry->ExecuteCallback();
+  }
+
   MenuEntry *child = m_pCurrentMenuEntry->getChild();
   if( child != NULL )
   {
