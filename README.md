@@ -1,6 +1,8 @@
-Adruino_LCD_MENU README
+# Adruino_LCD_MENU README
 
-By David Andrews - May 6, 2012
+Original library: By David Andrews - May 6, 2012
+
+Modified by Tweep, February 2017
 
 License: Modified BSD (See complete license at end)
 
